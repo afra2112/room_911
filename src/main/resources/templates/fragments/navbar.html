@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="navbar">
+    <nav class="bg-blue-800 text-white shadow-md">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-xl font-semibold">
+                <a th:href="@{/admin/index}" class="hover:text-gray-300 transition">ROOM_911 Admin</a>
+            </div>
+            <div class="space-x-6">
+                <a th:href="@{/admin/index}" class="hover:text-gray-300 transition">Inicio</a>
+                <a th:href="@{/admin/empleados/}" class="hover:text-gray-300 transition">Gestión de Empleados</a>
+                <a th:href="@{/admin/historial}" class="hover:text-gray-300 transition">Historial de Accesos</a>
+            </div>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

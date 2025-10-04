@@ -18,7 +18,7 @@ public class Employee {
 
     private String surname;
 
-    private String haveAccess;
+    private boolean haveAccess;
 
     private boolean active;
 
@@ -26,12 +26,12 @@ public class Employee {
     @JoinColumn(name = "department_id")
     private ProductionDepartment productionDepartment;
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public boolean isHaveAccess() {
+        return haveAccess;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setHaveAccess(boolean haveAccess) {
+        this.haveAccess = haveAccess;
     }
 
     public String getName() {
@@ -48,14 +48,6 @@ public class Employee {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getHaveAccess() {
-        return haveAccess;
-    }
-
-    public void setHaveAccess(String haveAccess) {
-        this.haveAccess = haveAccess;
     }
 
     public boolean isActive() {

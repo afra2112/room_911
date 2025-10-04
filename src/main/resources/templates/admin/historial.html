@@ -1,49 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Historial de Accesos - ROOM_911</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<header>
-    <h1>Historial de Accesos</h1>
-    <nav>
-        <a th:href="@{/admin/index}">Inicio</a>
-        <a th:href="@{/admin/empleados}">Empleados</a>
-        <a th:href="@{/admin/historial}">Historial</a>
-        <a th:href="@{/logout}">Salir</a>
-    </nav>
-</header>
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-<section>
-    <h2 th:text="'Historial de: ' + ${empleado.firstName} + ' ' + ${empleado.lastName}"></h2>
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <form th:action="@{/admin/historial/{id}(id=${empleado.id})}" method="get">
-        <label>Desde: <input type="date" name="startDate"></label>
-        <label>Hasta: <input type="date" name="endDate"></label>
-        <button type="submit">Filtrar</button>
+<main class="flex-grow container mx-auto px-6 py-12">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Historial de Accesos</h1>
+        <p class="text-gray-600">Consulta los intentos de ingreso al ROOM_911 por empleado o rango de fechas.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-8 text-center">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2"
+            th:text="'Empleado: ' + ${empleado.firstName} + ' ' + ${empleado.lastName}"></h2>
+        <p class="text-gray-500" th:text="'Departamento: ' + ${empleado.department.name}"></p>
+    </div>
+
+    <form th:action="@{/admin/historial/{id}(id=${empleado.id})}" method="get"
+          class="flex flex-col md:flex-row justify-center gap-4 mb-10">
+        <input type="date" name="startDate"
+               class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+        <input type="date" name="endDate"
+               class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+        <button type="submit"
+                class="bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg px-6 py-2 transition">
+            Filtrar
+        </button>
     </form>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Fecha y Hora</th>
-            <th>Resultado</th>
-            <th>Observación</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="log : ${accesos}">
-            <td th:text="${log.timestamp}"></td>
-            <td th:text="${log.success} ? 'Acceso Exitoso' : 'Denegado'"></td>
-            <td th:text="${log.message}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-blue-800 text-white">
+            <tr>
+                <th class="py-3 px-4">Fecha y Hora</th>
+                <th class="py-3 px-4">Resultado</th>
+                <th class="py-3 px-4">Observación</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log : ${accesos}" class="border-b hover:bg-gray-50 transition">
+                <td class="py-3 px-4" th:text="${#dates.format(log.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td class="py-3 px-4">
+                        <span th:classappend="${log.success} ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'"
+                              th:text="${log.success} ? 'Acceso Exitoso' : 'Denegado'"></span>
+                </td>
+                <td class="py-3 px-4" th:text="${log.message}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <form th:action="@{/admin/historial/{id}/pdf(id=${empleado.id})}" method="post">
-        <button type="submit">Exportar a PDF</button>
-    </form>
-</section>
+    <div class="flex justify-end mt-8">
+        <form th:action="@{/admin/historial/{id}/pdf(id=${empleado.id})}" method="post">
+            <button type="submit"
+                    class="bg-green-700 hover:bg-green-800 text-white font-medium rounded-lg px-6 py-2 transition">
+                📄 Exportar a PDF
+            </button>
+        </form>
+    </div>
+</main>
+
+<footer class="bg-blue-800 text-white text-center py-4 mt-auto">
+    <p>© 2025 Laboratorios XYZ — ROOM_911 Access System</p>
+</footer>
 </body>
 </html>

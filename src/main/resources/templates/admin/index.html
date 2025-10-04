@@ -1,32 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin - ROOM_911</title>
-    <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <meta charset="UTF-8">
+    <title>Panel de Administración - ROOM_911</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<header>
-    <h2>Panel de Administración - ROOM_911</h2>
-</header>
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-<section>
-    <p>Bienvenido, <span th:text="${#authentication.name}"></span></p>
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <nav>
-        <ul>
-            <li><a th:href="@{/admin/empleados}">Gestión de Empleados</a></li>
-            <li><a th:href="@{/accesos}">Historial de Accesos</a></li>
-            <li><a th:href="@{/reportes}">Reportes PDF</a></li>
-            <li>
-                <form th:action="@{/logout}" method="post">
+<main class="flex-grow">
+    <section class="container mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Bienvenido al Módulo ROOM_911</h1>
+            <p class="text-gray-600">Administra el acceso del personal autorizado al área de producción de medicamentos de alto costo.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition p-8 flex flex-col items-center">
+                <div class="bg-blue-100 text-blue-800 rounded-full p-4 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1118.364 4.56a9 9 0 01-13.243 13.243zM15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-2">Gestión de Empleados</h2>
+                <p class="text-gray-600 text-center mb-6">Registra, edita y administra empleados autorizados para el ROOM_911.</p>
+                <a th:href="@{/admin/empleados/}" class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-6 rounded-lg transition">
+                    Ir a gestión
+                </a>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition p-8 flex flex-col items-center">
+                <div class="bg-green-100 text-green-800 rounded-full p-4 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-2">Historial de Accesos</h2>
+                <p class="text-gray-600 text-center mb-6">Consulta los registros de intentos de acceso al ROOM_911.</p>
+                <a th:href="@{/admin/historial}" class="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded-lg transition">
+                    Ver historial
+                </a>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition p-8 flex flex-col items-center">
+                <div class="bg-red-100 text-red-800 rounded-full p-4 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-2">Cerrar Sesión</h2>
+                <p class="text-gray-600 text-center mb-6">Finaliza tu sesión de administrador de forma segura.</p>
+                <form th:action="@{/logout}" method="post" class="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded-lg transition">
                     <button type="submit">
                         Cerrar Sesión
                     </button>
                 </form>
-            </li>
-        </ul>
-    </nav>
-</section>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-blue-800 text-white text-center py-4 mt-auto">
+    <p>© 2025 Laboratorios XYZ — ROOM_911 Access System</p>
+</footer>
 </body>
 </html>
