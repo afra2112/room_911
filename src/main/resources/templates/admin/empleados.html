@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Gestión de Empleados - ROOM_911</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+  <h1>Gestión de Empleados</h1>
+  <nav>
+    <a th:href="@{/admin/index}">Inicio</a>
+    <a th:href="@{/admin/empleados}">Empleados</a>
+    <a th:href="@{/admin/historial}">Historial</a>
+    <a th:href="@{/logout}">Salir</a>
+  </nav>
+</header>
+
+<section>
+  <h2>Listado de Empleados</h2>
+  <form th:action="@{/admin/empleados/buscar}" method="get">
+    <input type="text" name="query" placeholder="Buscar por ID, nombre o apellido">
+    <select name="departmentId">
+      <option value="">Todos los departamentos</option>
+      <option th:each="dep : ${departamentos}"
+              th:value="${dep.id}"
+              th:text="${dep.name}"></option>
+    </select>
+    <button type="submit">Buscar</button>
+  </form>
+
+  <table>
+    <thead>
+    <tr>
+      <th>ID Interno</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Departamento</th>
+      <th>Acceso ROOM_911</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="empleado : ${empleados}">
+      <td th:text="${empleado.internalId}"></td>
+      <td th:text="${empleado.firstName}"></td>
+      <td th:text="${empleado.lastName}"></td>
+      <td th:text="${empleado.department.name}"></td>
+      <td>
+        <span th:text="${empleado.accessGranted} ? 'Permitido' : 'Denegado'"></span>
+      </td>
+      <td>
+        <a th:href="@{/admin/empleados/editar/{id}(id=${empleado.id})}">Editar</a> |
+        <a th:href="@{/admin/historial/{id}(id=${empleado.id})}">Historial</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <a th:href="@{/admin/empleados/nuevo}">Registrar Nuevo</a>
+
+  <h3>Cargar Empleados por CSV</h3>
+  <form th:action="@{/admin/empleados/cargar}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv">
+    <button type="submit">Subir</button>
+  </form>
+</section>
+</body>
+</html>

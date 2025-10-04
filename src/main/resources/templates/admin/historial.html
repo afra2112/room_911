@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Historial de Accesos - ROOM_911</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1>Historial de Accesos</h1>
+    <nav>
+        <a th:href="@{/admin/index}">Inicio</a>
+        <a th:href="@{/admin/empleados}">Empleados</a>
+        <a th:href="@{/admin/historial}">Historial</a>
+        <a th:href="@{/logout}">Salir</a>
+    </nav>
+</header>
+
+<section>
+    <h2 th:text="'Historial de: ' + ${empleado.firstName} + ' ' + ${empleado.lastName}"></h2>
+
+    <form th:action="@{/admin/historial/{id}(id=${empleado.id})}" method="get">
+        <label>Desde: <input type="date" name="startDate"></label>
+        <label>Hasta: <input type="date" name="endDate"></label>
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Fecha y Hora</th>
+            <th>Resultado</th>
+            <th>Observación</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="log : ${accesos}">
+            <td th:text="${log.timestamp}"></td>
+            <td th:text="${log.success} ? 'Acceso Exitoso' : 'Denegado'"></td>
+            <td th:text="${log.message}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form th:action="@{/admin/historial/{id}/pdf(id=${empleado.id})}" method="post">
+        <button type="submit">Exportar a PDF</button>
+    </form>
+</section>
+</body>
+</html>

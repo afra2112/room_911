@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - ROOM_911</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<header>
+    <h2>Panel de Administración - ROOM_911</h2>
+</header>
+
+<section>
+    <p>Bienvenido, <span th:text="${#authentication.name}"></span></p>
+
+    <nav>
+        <ul>
+            <li><a th:href="@{/admin/empleados}">Gestión de Empleados</a></li>
+            <li><a th:href="@{/accesos}">Historial de Accesos</a></li>
+            <li><a th:href="@{/reportes}">Reportes PDF</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">
+                        Cerrar Sesión
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+</section>
+</body>
+</html>
