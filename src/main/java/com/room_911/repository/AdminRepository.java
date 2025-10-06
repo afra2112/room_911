@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Long> {
-    Admin findByUsernameAndActive(String username, boolean active);
+    Admin findByUsernameAndActiveAndDeletedFalse(String username, boolean active);
     List<Admin> findByActive(boolean active);
 }

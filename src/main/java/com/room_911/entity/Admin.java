@@ -19,6 +19,8 @@ public class Admin{
 
     private boolean active;
 
+    private boolean deleted = false;
+
     public int getAdminId() {
         return adminId;
     }

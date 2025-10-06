@@ -16,7 +16,7 @@ public class UserDetailServiceImplement implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Admin admin = adminRepository.findByUsernameAndActive(username, true);
+        Admin admin = adminRepository.findByUsernameAndActiveAndDeletedFalse(username, true);
 
         return User.builder()
                 .username(admin.getUsername())

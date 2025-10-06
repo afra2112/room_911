@@ -20,7 +20,7 @@ public class Room911Application {
 	@Bean
 	public CommandLineRunner commandLineRunner(PasswordEncoder passwordEncoder, AdminRepository adminRepository, ProductionDepartmentRepository productionDepartmentRepository) {
 		return args -> {
-			if (adminRepository.findByUsernameAndActive("andres_admin_room_911", true) == null) {
+			if (adminRepository.findByUsernameAndActiveAndDeletedFalse("andres_admin_room_911", true) == null) {
 				Admin admin = new Admin();
 				
 				admin.setActive(true);

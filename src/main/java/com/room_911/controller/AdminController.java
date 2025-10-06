@@ -3,6 +3,7 @@ package com.room_911.controller;
 import com.room_911.entity.Admin;
 import com.room_911.entity.Attemp;
 import com.room_911.entity.Employee;
+import com.room_911.implement.UserDetailServiceImplement;
 import com.room_911.repository.AdminRepository;
 import com.room_911.specification.AttempSpecification;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -97,10 +101,26 @@ public class AdminController {
         return "admin/admins";
     }
 
-    @PostMapping("/admins/eliminar/{id}")
-    public String eliminarAdmin(@PathVariable(name = "id") Long id) {
+    @PostMapping("/admins/eliminar")
+    public String eliminarAdmin(@RequestParam(name = "id") Long id) {
         Admin admin = adminRepository.findById(id).orElseThrow();
         admin.setActive(false);
+        adminRepository.save(admin);
+        return "redirect:/admin/admins?eliminados=false";
+    }
+
+    @PostMapping("/admins/recuperar/{id}")
+    public String recuperarAdmin(@PathVariable(name = "id") Long id) {
+        Admin admin = adminRepository.findById(id).orElseThrow();
+        admin.setActive(true);
+        adminRepository.save(admin);
+        return "redirect:/admin/admins?eliminados=false";
+    }
+
+    @PostMapping("/admins/eliminar-permanentemente")
+    public String eliminarAdminPermanentemente(@RequestParam(name = "id") Long id) {
+        Admin admin = adminRepository.findById(id).orElseThrow();
+        admin.setDeleted(true);
         adminRepository.save(admin);
         return "redirect:/admin/admins?eliminados=false";
     }
@@ -115,6 +135,16 @@ public class AdminController {
         adminRepository.save(admin);
         return "redirect:/admin/admins?eliminados=false";
     }
+
+    @PostMapping("/admins/editar")
+    public String editar(@ModelAttribute Admin admin) {
+        admin.setDeleted(false);
+        admin.setActive(true);
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        adminRepository.save(admin);
+        return "redirect:/admin/admins?eliminados=false";
+    }
+
 
     @GetMapping("/historial")
     public String historial() {
