@@ -1,7 +1,7 @@
 package com.room_911.controller;
 
+import com.room_911.entity.Attemp;
 import com.room_911.entity.Employee;
-import com.room_911.repository.EmployeeRepository;
 import com.room_911.repository.ProductionDepartmentRepository;
 import com.room_911.service.EmployeeService;
 import com.room_911.service.ExcelTemplateService;
@@ -15,9 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/empleados")
@@ -40,6 +44,9 @@ public class EmployeeController {
 
     @Autowired
     ImportExcelEmployess importExcelEmployess;
+
+    @Autowired
+    SpringTemplateEngine springTemplateEngine;
 
     @GetMapping("/")
     public String empleados(@RequestParam(name = "query", required = false) String query, @RequestParam(name = "departmentId", required = false) Long department, Model model) {
@@ -76,6 +83,34 @@ public class EmployeeController {
         model.addAttribute("accesos", attempSpecification.filterAttemps(dateInicio, dateFinal, employeeId));
         model.addAttribute("empleado", employeeService.buscarPorId(employeeId).orElseThrow());
         return "admin/historialEmpleado";
+    }
+
+    @GetMapping("/historial/pdf/{id}")
+    public void generarPdf(
+            HttpServletResponse response,
+            @PathVariable(name = "id") String employeeId,
+            @RequestParam(name = "startDate", required = false) LocalDate dateInicio,
+            @RequestParam(name = "endDate", required = false) LocalDate dateFinal
+    ) throws IOException {
+        Employee employee = employeeService.buscarPorId(employeeId).orElseThrow();
+        List<Attemp> attemps = attempSpecification.filterAttemps(dateInicio, dateFinal, employeeId);
+
+        Context context = new Context();
+        context.setVariable("accesos", attemps);
+        context.setVariable("empleado", employee);
+        context.setVariable("titulo", "Historial de accesos - " + employee.getName() + " " + employee.getSurname());
+
+        String html = springTemplateEngine.process("admin/historialEmpleadoPDF", context);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=historial_accesos_"+employee.getName()+"_"+employee.getSurname()+".pdf");
+
+        ITextRenderer renderer = new ITextRenderer();
+
+        renderer.setDocumentFromString(html);
+        renderer.layout();
+        renderer.createPDF(response.getOutputStream());
+        response.getOutputStream().flush();
     }
 
     @PostMapping("/cargar")

@@ -42,6 +42,7 @@ public class AttempSpecification {
         }
 
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("date")));
 
         return entityManager.createQuery(criteriaQuery).getResultList();
     }

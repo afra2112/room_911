@@ -16,6 +16,11 @@
                     Gestión de Empleados
                 </a>
 
+                <a th:href="@{/admin/admins(eliminados=false)}"
+                   class="text-gray-200 font-medium hover:text-white hover:underline underline-offset-4 transition">
+                    Gestión de Administradores
+                </a>
+
                 <form th:action="@{/logout}" method="post" class="ml-4">
                     <button type="submit"
                             class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800

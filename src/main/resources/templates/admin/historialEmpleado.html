@@ -24,9 +24,9 @@
 
     <form th:action="@{/admin/empleados/historial/{id}(id=${empleado.employeeId})}" method="get"
           class="flex flex-col md:flex-row justify-center gap-4 mb-10">
-        <input type="date" name="startDate"
+        <input type="date" name="startDate" id="startDate"
                class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
-        <input type="date" name="endDate"
+        <input type="date" name="endDate" id="endDate"
                class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
         <button type="submit"
                 class="bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg px-6 py-2 transition">
@@ -59,7 +59,9 @@
     </div>
 
     <div class="flex justify-end mt-10">
-        <form th:action="@{/admin/historial/{id}/pdf(id=${empleado.employeeId})}" method="post">
+        <form th:action="@{/admin/empleados/historial/pdf/{id}(id=${empleado.employeeId})}" method="get">
+            <input type="hidden" name="startDate" id="pdfStartDate">
+            <input type="hidden" name="endDate" id="pdfEndDate">
             <button type="submit"
                     class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800
                     text-white font-semibold rounded-lg px-6 py-2 shadow-md transition">
@@ -69,6 +71,23 @@
     </div>
 </main>
 
+<script>
+    const startInput = document.getElementById('startDate');
+    const endInput = document.getElementById('endDate');
+    const pdfStart = document.getElementById('pdfStartDate');
+    const pdfEnd = document.getElementById('pdfEndDate');
+
+    function sincronizarDates() {
+        pdfStart.value = startInput.value;
+        pdfEnd.value = endInput.value;
+    }
+
+    startInput.addEventListener('change', sincronizarDates);
+    endInput.addEventListener('change', sincronizarDates);
+
+
+    window.addEventListener('DOMContentLoaded', sincronizarDates);
+</script>
 <footer class="bg-blue-800 text-white text-center py-4 mt-auto">
     <p>© 2025 Laboratorios XYZ — ROOM_911 Access System</p>
 </footer>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Administradores - ROOM_911</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="min-h-screen p-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+        <span th:text="${eliminados} ? 'Administradores Eliminados' : 'Gestión de Administradores'"></span>
+    </h1>
+
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
+        <div class="flex gap-3 items-center w-full sm:w-auto">
+            <input type="text" id="searchInput" placeholder="Buscar administrador..."
+                   class="w-full sm:w-64 p-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <div class="flex gap-3">
+            <a th:href="@{/admin/admins(eliminados=${!eliminados})}"
+               class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition">
+                <span th:text="${eliminados} ? 'Volver a Activos' : 'Ver Eliminados'"></span>
+            </a>
+
+            <button th:if="${!eliminados}" onclick="openCreateModal()"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                + Nuevo Administrador
+            </button>
+        </div>
+    </div>
+
+    <div id="adminContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="admin : ${admins}"
+             class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition transform hover:-translate-y-1"
+             th:attr="data-name=${admin.username}">
+
+            <h2 class="text-xl font-semibold text-gray-800" th:text="${admin.adminName}"></h2>
+            <p class="text-gray-500 mt-1">
+                <span class="font-medium text-gray-700">Usuario:</span>
+                <span th:text="${admin.username}"></span>
+            </p>
+
+            <div class="mt-4 flex justify-end space-x-3">
+                <a th:if="${!eliminados}" th:href="@{/admin/editar/{id}(id=${admin.adminId})}"
+                   class="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded-lg">Editar</a>
+
+                <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
+                        th:attr="data-id=${admin.adminId}, data-name=${admin.adminName}"
+                        onclick="openDeleteModal(this)">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="createModal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 w-96 shadow-lg relative">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-700 text-center">Nuevo Administrador</h2>
+
+        <form th:action="@{/admins/nuevo}" method="post" class="space-y-3">
+            <input type="text" name="nombre" placeholder="Nombre completo" required class="w-full p-2 border rounded-lg">
+            <input type="text" name="username" placeholder="Usuario" required class="w-full p-2 border rounded-lg">
+            <input type="password" name="password" placeholder="Contraseña" required class="w-full p-2 border rounded-lg">
+
+            <div class="flex justify-between mt-4">
+                <button type="button" onclick="closeCreateModal()" class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">Cancelar</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 w-96 shadow-lg relative">
+        <h2 class="text-2xl font-semibold mb-2 text-gray-700 text-center">Eliminar Administrador</h2>
+        <p class="text-gray-600 text-center mb-4">¿Seguro que deseas eliminar a <span id="adminName" class="font-bold"></span>?</p>
+        <div class="flex justify-between mt-4">
+            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">Cancelar</button>
+            <a id="confirmDeleteBtn" class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">Eliminar</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        const search = this.value.toLowerCase();
+        const cards = document.querySelectorAll("#adminContainer > div");
+        cards.forEach(card => {
+            const name = card.getAttribute("data-name").toLowerCase();
+            card.style.display = name.includes(search) ? "block" : "none";
+        });
+    });
+
+    function openCreateModal() {
+        document.getElementById("createModal").classList.remove("hidden");
+    }
+    function closeCreateModal() {
+        document.getElementById("createModal").classList.add("hidden");
+    }
+
+    function openDeleteModal(btn) {
+    const adminId = btn.getAttribute("data-id");
+    const adminName = btn.getAttribute("data-name");
+
+    document.getElementById("adminName").textContent = adminName;
+    document.getElementById("confirmDeleteBtn").onclick = function() {
+        fetch(`/admin/admins/eliminar/${adminId}`, {
+            method: 'POST'
+        }).then(() => {
+            window.location.href = '/admin/admins?eliminados=false';
+        }).catch(err => console.error(err));
+    };
+    document.getElementById("deleteModal").classList.remove("hidden");
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.add("hidden");
+    }
+</script>
+</body>
+</html>
