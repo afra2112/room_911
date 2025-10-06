@@ -36,50 +36,47 @@ Diseñar y desarrollar un módulo web que permita gestionar el acceso del person
 
 ## Diagramas
 
-### Diagrama de Casos de Uso
+%% Casos de Uso - ROOM_911
+graph TD
+    subgraph ROOM_911
+        UC1[Iniciar sesión]
+        UC2[Registrar empleado]
+        UC3[Cargar empleados por CSV]
+        UC4[Editar información del empleado]
+        UC5[Conceder o denegar acceso]
+        UC6[Buscar empleados]
+        UC7[Filtrar empleados por departamento]
+        UC8[Consultar histórico de accesos]
+        UC9[Filtrar accesos por rango de fechas]
+        UC10[Generar PDF del historial de accesos]
+        UC11[Registrar nuevos administradores]
+        UC12[Cerrar sesión]
+        UC13[Intentar acceso al ROOM_911]
+        UC14[Registrar intento de acceso]
+    end
 
-```mermaid
-%% Caso de uso ROOM_911
-usecaseDiagram
-actor "Administrador ROOM_911" as Admin
-actor "Empleado" as Empleado
+    %% Relaciones con Administrador
+    Admin[Administrador ROOM_911] --> UC1
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC5
+    Admin --> UC6
+    Admin --> UC7
+    Admin --> UC8
+    Admin --> UC9
+    Admin --> UC10
+    Admin --> UC11
+    Admin --> UC12
 
-rectangle ROOM_911 {
-  (Iniciar sesión) as UC1
-  (Registrar empleado) as UC2
-  (Cargar empleados por CSV) as UC3
-  (Editar información del empleado) as UC4
-  (Conceder o denegar acceso) as UC5
-  (Buscar empleados) as UC6
-  (Filtrar empleados por departamento) as UC7
-  (Consultar histórico de accesos) as UC8
-  (Filtrar accesos por rango de fechas) as UC9
-  (Generar PDF del historial de accesos) as UC10
-  (Registrar nuevos administradores) as UC11
-  (Cerrar sesión) as UC12
-  (Intentar acceso al ROOM_911) as UC13
-  (Registrar intento de acceso) as UC14
+    %% Relaciones con Empleado
+    Empleado[Empleado] --> UC13
+    UC13 --> UC14
 
-  Admin --> UC1
-  Admin --> UC2
-  Admin --> UC3
-  Admin --> UC4
-  Admin --> UC5
-  Admin --> UC6
-  Admin --> UC7
-  Admin --> UC8
-  Admin --> UC9
-  Admin --> UC10
-  Admin --> UC11
-  Admin --> UC12
-
-  Empleado --> UC13
-  UC13 --> UC14 : <<include>>
-
-  UC4 --> UC5 : <<extend>>
-  UC8 --> UC9 : <<include>>
-  UC8 --> UC10 : <<extend>>
-}
+    %% Extend / Include
+    UC4 -.-> UC5
+    UC8 --> UC9
+    UC8 -.-> UC10
 
 erDiagram
     ADMIN {
