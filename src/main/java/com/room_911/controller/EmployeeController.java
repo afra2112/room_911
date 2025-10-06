@@ -10,6 +10,9 @@ import com.room_911.specification.AttempSpecification;
 import com.room_911.specification.EmployeeSpecification;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -78,10 +81,20 @@ public class EmployeeController {
             @PathVariable(name = "id") String employeeId,
             @RequestParam(name = "startDate", required = false) LocalDate dateInicio,
             @RequestParam(name = "endDate", required = false) LocalDate dateFinal,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
             Model model
     ) {
-        model.addAttribute("accesos", attempSpecification.filterAttemps(dateInicio, dateFinal, employeeId));
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Attemp> accesos = attempSpecification.filterAttemps(dateInicio, dateFinal, employeeId, pageable);
+
+        model.addAttribute("accesos", accesos);
         model.addAttribute("empleado", employeeService.buscarPorId(employeeId).orElseThrow());
+        model.addAttribute("paginaActual", page);
+        model.addAttribute("paginasTotales", accesos.getTotalPages());
+        model.addAttribute("tieneSiguiente", accesos.hasNext());
+        model.addAttribute("tieneAnterior", accesos.hasPrevious());
         return "admin/historialEmpleado";
     }
 

@@ -8,13 +8,10 @@
 </head>
 <body class="min-h-screen bg-gray-900 flex items-center justify-center">
 
-<!-- Contenedor del login -->
 <div class="relative w-full max-w-md p-8 bg-gray-800 rounded-2xl shadow-2xl">
 
-    <!-- Título -->
     <h2 class="text-2xl font-bold text-white text-center mb-6">Login Administrador ROOM_911</h2>
 
-    <!-- Mensajes de error / logout -->
     <p th:if="${param.error}" class="text-red-400 font-semibold text-center mb-4 animate-pulse">
         Usuario o contraseña incorrectos
     </p>
@@ -22,7 +19,6 @@
         Sesión cerrada correctamente
     </p>
 
-    <!-- Formulario -->
     <form th:action="@{/login}" method="post" class="space-y-5">
 
         <div>
@@ -44,10 +40,8 @@
 
     </form>
 
-    <!-- Extra: link a volver al acceso general -->
     <a href="/" class="block text-center text-gray-400 mt-6 hover:text-white transition">Volver a control de acceso</a>
 
-    <!-- Fondo decorativo -->
     <div class="absolute -inset-1 bg-gradient-to-br from-blue-800 via-gray-900 to-black rounded-2xl blur-xl opacity-30 -z-10"></div>
 </div>
 

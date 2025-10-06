@@ -7,6 +7,9 @@ import com.room_911.repository.AdminRepository;
 import com.room_911.specification.AttempSpecification;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,9 +42,19 @@ public class AdminController {
     public String index(
             @RequestParam(name = "startDate", required = false) LocalDate dateInicio,
             @RequestParam(name = "endDate", required = false) LocalDate dateFinal,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
             Model model
     ) {
-        model.addAttribute("accesos", attempSpecification.filterAttemps(dateInicio, dateFinal, null));
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Attemp> accesos = attempSpecification.filterAttemps(dateInicio, dateFinal, null, pageable);
+
+        model.addAttribute("accesos", accesos);
+        model.addAttribute("tieneSiguiente", accesos.hasNext());
+        model.addAttribute("tieneAnterior", accesos.hasPrevious());
+        model.addAttribute("paginaActual", page);
+        model.addAttribute("paginasTotales", accesos.getTotalPages());
         return "admin/index";
     }
 
