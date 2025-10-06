@@ -1,15 +1,23 @@
 package com.room_911.controller;
 
 import com.room_911.entity.Admin;
+import com.room_911.entity.Attemp;
+import com.room_911.entity.Employee;
 import com.room_911.repository.AdminRepository;
 import com.room_911.specification.AttempSpecification;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,6 +32,9 @@ public class AdminController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    SpringTemplateEngine springTemplateEngine;
+
     @GetMapping("/index")
     public String index(
             @RequestParam(name = "startDate", required = false) LocalDate dateInicio,
@@ -32,6 +43,33 @@ public class AdminController {
     ) {
         model.addAttribute("accesos", attempSpecification.filterAttemps(dateInicio, dateFinal, null));
         return "admin/index";
+    }
+
+    @GetMapping("/historial/pdf")
+    public void generarPdf(
+            HttpServletResponse response,
+            @RequestParam(name = "startDate", required = false) LocalDate dateInicio,
+            @RequestParam(name = "endDate", required = false) LocalDate dateFinal
+    ) throws IOException {
+        List<Attemp> attemps = attempSpecification.filterAttemps(dateInicio, dateFinal, null);
+
+        Context context = new Context();
+        context.setVariable("accesos", attemps);
+        context.setVariable("startDate", dateInicio);
+        context.setVariable("endDate", dateFinal);
+        context.setVariable("titulo", "Historial de accesos - TODOS");
+
+        String html = springTemplateEngine.process("admin/historialTodoPDF", context);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=historial_accesos_todo.pdf");
+
+        ITextRenderer renderer = new ITextRenderer();
+
+        renderer.setDocumentFromString(html);
+        renderer.layout();
+        renderer.createPDF(response.getOutputStream());
+        response.getOutputStream().flush();
     }
 
     @GetMapping("/admins")

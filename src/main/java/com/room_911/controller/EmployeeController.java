@@ -96,6 +96,8 @@ public class EmployeeController {
         List<Attemp> attemps = attempSpecification.filterAttemps(dateInicio, dateFinal, employeeId);
 
         Context context = new Context();
+        context.setVariable("startDate", dateInicio);
+        context.setVariable("endDate", dateFinal);
         context.setVariable("accesos", attemps);
         context.setVariable("empleado", employee);
         context.setVariable("titulo", "Historial de accesos - " + employee.getName() + " " + employee.getSurname());
