@@ -16,7 +16,7 @@ Diseñar y desarrollar un módulo web que permita gestionar el acceso del person
 
 ## Historias de Usuario
 
-### 🧑‍💼 Administrador ROOM_911
+### Administrador ROOM_911
 - Iniciar sesión con usuario y contraseña.  
 - Registrar nuevos empleados con datos básicos y asignar departamento.  
 - Cargar un archivo CSV con varios empleados.  
@@ -28,15 +28,15 @@ Diseñar y desarrollar un módulo web que permita gestionar el acceso del person
 - Descargar en PDF el historial de intentos de acceso de un empleado.  
 - Registrar y gestionar otros usuarios administradores.
 
-### 👷‍♂️ Empleado
+### Empleado
 - Simular intento de acceso al ROOM_911 con número de identificación interno.  
-- Recibir respuesta de autorización o denegación.
 
 ---
 
 ## Diagramas
 
-%% Casos de Uso - ROOM_911
+## Casos de Uso - ROOM_911
+```mermaid
 graph TD
     subgraph ROOM_911
         UC1[Iniciar sesión]
@@ -55,7 +55,6 @@ graph TD
         UC14[Registrar intento de acceso]
     end
 
-    %% Relaciones con Administrador
     Admin[Administrador ROOM_911] --> UC1
     Admin --> UC2
     Admin --> UC3
@@ -69,15 +68,16 @@ graph TD
     Admin --> UC11
     Admin --> UC12
 
-    %% Relaciones con Empleado
     Empleado[Empleado] --> UC13
     UC13 --> UC14
 
-    %% Extend / Include
     UC4 -.-> UC5
     UC8 --> UC9
     UC8 -.-> UC10
+```
 
+## Modelo Relacional - ROOM_911
+```mermaid
 erDiagram
     ADMIN {
         int adminId PK
@@ -114,6 +114,7 @@ erDiagram
 
     EMPLOYEE }|--|| PRODUCTION_DEPARTMENT : "pertenece a"
     ATTEMP }|--|| EMPLOYEE : "realizado por"
+```
 
 Versión: 1.0
 Autor: Andres Ramirez
