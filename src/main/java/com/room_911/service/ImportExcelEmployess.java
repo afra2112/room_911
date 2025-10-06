@@ -1,7 +1,6 @@
 package com.room_911.service;
 
 import com.room_911.entity.Employee;
-import com.room_911.repository.EmployeeRepository;
 import com.room_911.repository.ProductionDepartmentRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ public class ImportExcelEmployess {
     ProductionDepartmentRepository productionDepartmentRepository;
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    EmployeeService employeeService;
 
     public int importEmployeesFromExcel(MultipartFile excel){
         int insertsNum = 0;
@@ -34,9 +33,10 @@ public class ImportExcelEmployess {
 
                 employee.setName(fila.getCell(0).getStringCellValue());
                 employee.setSurname(fila.getCell(1).getStringCellValue());
-                employee.setProductionDepartment(productionDepartmentRepository.findByName(fila.getCell(2).getStringCellValue()));
+                employee.setDocument((long) fila.getCell(2).getNumericCellValue());
+                employee.setProductionDepartment(productionDepartmentRepository.findByName(fila.getCell(3).getStringCellValue()));
 
-                Cell celdaAcceso = fila.getCell(3);
+                Cell celdaAcceso = fila.getCell(4);
                 boolean haveAccess = false;
 
                 if(celdaAcceso != null && celdaAcceso.getCellType() == CellType.STRING){
@@ -49,7 +49,7 @@ public class ImportExcelEmployess {
 
                 employee.setHaveAccess(haveAccess);
 
-                employeeRepository.save(employee);
+                employeeService.crearEmpleado(employee);
                 insertsNum ++;
             }
         } catch (IOException e) {

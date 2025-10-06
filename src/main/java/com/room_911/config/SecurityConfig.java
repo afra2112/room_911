@@ -25,7 +25,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
                 .authorizeHttpRequests(auth -> {
-                   auth.requestMatchers("/", "/login").permitAll();
+                   auth.requestMatchers("/", "/validar-acceso", "/login").permitAll();
                    auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
                    auth.anyRequest().authenticated();
                 })

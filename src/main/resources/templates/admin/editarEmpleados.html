@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Empleado - ROOM_911</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="flex-grow container mx-auto px-6 py-12">
+
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Editar Empleado</h1>
+        <p class="text-gray-600">Completa los datos del empleado para registrar sus nuevos datos en el sistema ROOM_911.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-3xl mx-auto">
+        <form th:action="@{/admin/empleados/nuevo}" th:object="${empleado}" method="post" class="space-y-6">
+            <input type="hidden" th:field="*{employeeId}">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Nombre</label>
+                    <input type="text" th:field="*{name}"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Apellido</label>
+                    <input type="text" th:field="*{surname}"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Documento</label>
+                    <input type="text" th:field="*{document}"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Departamento</label>
+                    <select th:field="*{productionDepartment.departmentId}"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="" disabled selected>Seleccione un departamento</option>
+                        <option th:each="dep : ${departamentos}" th:value="${dep.departmentId}" th:text="${dep.name}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">¿Tiene acceso al ROOM_911?</label>
+                <div class="flex gap-6 mt-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" th:field="*{haveAccess}" value="true" class="text-blue-600 focus:ring-blue-500">
+                        <span>Sí</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" th:field="*{haveAccess}" value="false" class="text-blue-600 focus:ring-blue-500">
+                        <span>No</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 pt-6">
+                <a th:href="@{/admin/empleados/}"
+                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded-lg px-6 py-2 transition">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg px-6 py-2 shadow-md transition">
+                    Actualizar Datos
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer class="bg-blue-800 text-white text-center py-4 mt-auto">
+    <p>© 2025 Laboratorios XYZ — ROOM_911 Access System</p>
+</footer>
+
+</body>
+</html>

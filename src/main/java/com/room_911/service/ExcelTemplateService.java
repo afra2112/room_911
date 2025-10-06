@@ -29,8 +29,9 @@ public class ExcelTemplateService {
             Row cabecera = hoja.createRow(0);
             cabecera.createCell(0).setCellValue("Nombre");
             cabecera.createCell(1).setCellValue("Apellido");
-            cabecera.createCell(2).setCellValue("Departamento");
-            cabecera.createCell(3).setCellValue("Tiene Acceso");
+            cabecera.createCell(2).setCellValue("Documento");
+            cabecera.createCell(3).setCellValue("Departamento");
+            cabecera.createCell(4).setCellValue("Tiene Acceso");
 
             String[] nombresDepartamentos = departments.stream().map(ProductionDepartment::getName).toArray(String[]::new);
 
@@ -49,13 +50,13 @@ public class ExcelTemplateService {
             DataValidationHelper helper = hoja.getDataValidationHelper();
             DataValidationConstraint constraint = helper.createFormulaListConstraint("lista_departamentos");
             //empieza desde la fila 1 porq 0 es la header, hasta la 100, y empieza en columna 2 (o sea la c) y termina ahi mismo
-            CellRangeAddressList addressList = new CellRangeAddressList(1, 100, 2, 2);
+            CellRangeAddressList addressList = new CellRangeAddressList(1, 100, 3, 3);
             DataValidation validation = helper.createValidation(constraint, addressList);
             validation.setShowErrorBox(true);
             hoja.addValidationData(validation);
 
             DataValidationHelper helperAcceso = hoja.getDataValidationHelper();
-            CellRangeAddressList rangoAcceso = new CellRangeAddressList(1, 100, 3, 3);
+            CellRangeAddressList rangoAcceso = new CellRangeAddressList(1, 100, 4, 4);
             DataValidationConstraint constraintAcceso = helperAcceso.createExplicitListConstraint(new String[]{"Si", "No"});
             DataValidation validationAcceso = helperAcceso.createValidation(constraintAcceso, rangoAcceso);
             validation.setShowErrorBox(true);

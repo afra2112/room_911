@@ -1,28 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - ROOM_911</title>
-    <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h2>Login Administrador ROOM_911</h2>
+<body class="min-h-screen bg-gray-900 flex items-center justify-center">
 
-<form th:action="@{/login}" method="post">
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" required/>
+<!-- Contenedor del login -->
+<div class="relative w-full max-w-md p-8 bg-gray-800 rounded-2xl shadow-2xl">
 
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" required/>
+    <!-- Título -->
+    <h2 class="text-2xl font-bold text-white text-center mb-6">Login Administrador ROOM_911</h2>
 
-    <button type="submit">Ingresar</button>
-</form>
+    <!-- Mensajes de error / logout -->
+    <p th:if="${param.error}" class="text-red-400 font-semibold text-center mb-4 animate-pulse">
+        Usuario o contraseña incorrectos
+    </p>
+    <p th:if="${param.logout}" class="text-green-400 font-semibold text-center mb-4 animate-pulse">
+        Sesión cerrada correctamente
+    </p>
 
-<p th:if="${param.error}" style="color:red;">
-    Usuario o contraseña incorrectos
-</p>
-<p th:if="${param.logout}" style="color:green;">
-    Sesión cerrada correctamente
-</p>
+    <!-- Formulario -->
+    <form th:action="@{/login}" method="post" class="space-y-5">
+
+        <div>
+            <label for="username" class="block text-gray-200 font-medium mb-2">Usuario:</label>
+            <input type="text" id="username" name="username" required
+                   class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+        </div>
+
+        <div>
+            <label for="password" class="block text-gray-200 font-medium mb-2">Contraseña:</label>
+            <input type="password" id="password" name="password" required
+                   class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 rounded-lg shadow-lg transition-colors">
+            Ingresar
+        </button>
+
+    </form>
+
+    <!-- Extra: link a volver al acceso general -->
+    <a href="/" class="block text-center text-gray-400 mt-6 hover:text-white transition">Volver a control de acceso</a>
+
+    <!-- Fondo decorativo -->
+    <div class="absolute -inset-1 bg-gradient-to-br from-blue-800 via-gray-900 to-black rounded-2xl blur-xl opacity-30 -z-10"></div>
+</div>
+
 </body>
 </html>

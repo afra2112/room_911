@@ -26,7 +26,7 @@ public class EmployeeSpecification {
         }
     }
 
-    public List<Employee> filterEmployees(String query){
+    public List<Employee> filterEmployees(String query, Long department){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Employee> criteriaQuery = criteriaBuilder.createQuery(Employee.class);
         Root<Employee> root = criteriaQuery.from(Employee.class);
@@ -44,6 +44,10 @@ public class EmployeeSpecification {
                         )
                 );
             }
+        }
+
+        if(department != null && department != 0){
+            predicates.add(criteriaBuilder.equal(root.get("productionDepartment").get("departmentId"), department));
         }
 
         criteriaQuery.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));

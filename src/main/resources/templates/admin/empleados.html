@@ -21,7 +21,7 @@
                 class="border border-gray-300 rounded-lg px-4 py-2 w-full md:w-1/4 focus:ring-2 focus:ring-blue-500 outline-none">
             <option value="">Todos los departamentos</option>
             <option th:each="dep : ${departamentos}"
-                    th:value="${dep.id}"
+                    th:value="${dep.departmentId}"
                     th:text="${dep.name}"></option>
         </select>
 
@@ -46,18 +46,18 @@
             <tbody>
             <tr th:each="empleado : ${empleados}"
                 class="border-b hover:bg-gray-50 transition">
-                <td class="py-3 px-4" th:text="${empleado.internalId}"></td>
-                <td class="py-3 px-4" th:text="${empleado.firstName}"></td>
-                <td class="py-3 px-4" th:text="${empleado.lastName}"></td>
-                <td class="py-3 px-4" th:text="${empleado.department.name}"></td>
+                <td class="py-3 px-4" th:text="${empleado.employeeId}"></td>
+                <td class="py-3 px-4" th:text="${empleado.name}"></td>
+                <td class="py-3 px-4" th:text="${empleado.surname}"></td>
+                <td class="py-3 px-4" th:text="${empleado.productionDepartment.name}"></td>
                 <td class="py-3 px-4">
-                        <span th:classappend="${empleado.accessGranted} ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'"
-                              th:text="${empleado.accessGranted} ? 'Permitido' : 'Denegado'"></span>
+                        <span th:classappend="${empleado.haveAccess} ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'"
+                              th:text="${empleado.haveAccess} ? 'Permitido' : 'Denegado'"></span>
                 </td>
                 <td class="py-3 px-4 text-center space-x-3">
-                    <a th:href="@{/admin/empleados/editar/{id}(id=${empleado.id})}"
+                    <a th:href="@{/admin/empleados/editar/{id}(id=${empleado.employeeId})}"
                        class="text-blue-700 hover:underline">Editar</a>
-                    <a th:href="@{/admin/historial/{id}(id=${empleado.id})}"
+                    <a th:href="@{/admin/empleados/historial/{id}(id=${empleado.employeeId})}"
                        class="text-green-700 hover:underline">Historial</a>
                 </td>
             </tr>
@@ -67,7 +67,7 @@
 
 
     <div class="flex justify-between items-center mt-10">
-        <a th:href="@{/admin/empleados/nuevo}"
+        <a onclick="openModal()"
            class="bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg px-6 py-2 transition">
             Registrar Nuevo Empleado
         </a>
@@ -93,6 +93,112 @@
         <div th:if="${error}" class="mt-4 bg-red-100 text-red-800 p-3 rounded-md" th:text="${error}"></div>
     </div>
 </main>
+
+<div id="empleadoModal"
+     class="fixed inset-0 hidden z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
+
+    <div id="modalContent"
+         class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-3xl transform transition-all duration-300 scale-95 opacity-0">
+
+        <div class="flex justify-between items-center border-b pb-3 mb-4">
+            <h2 class="text-2xl font-semibold text-gray-800">Registrar Empleado</h2>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+        </div>
+
+        <form th:action="@{/admin/empleados/nuevo}" id="empleadoForm" method="post" class="space-y-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Nombre</label>
+                    <input type="text" name="name" id="name" placeholder="Ej. Juan"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Apellido</label>
+                    <input type="text" name="surname" id="surname" placeholder="Ej. Pérez"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">Documento</label>
+                <input type="text" name="document" id="document" placeholder="Ej. 1023456789"
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">Departamento</label>
+                <select name="productionDepartment" id="productionDepartment"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                    <option value="" disabled selected>Seleccione un departamento</option>
+                    <option th:each="dep : ${departamentos}"
+                            th:value="${dep.departmentId}"
+                            th:text="${dep.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">¿Tiene acceso al ROOM_911?</label>
+                <div class="flex gap-6 mt-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="haveAccess" value="true" id="accessTrue"
+                               class="text-blue-600 focus:ring-blue-500">
+                        <span>Sí</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="haveAccess" value="false" id="accessFalse"
+                               class="text-blue-600 focus:ring-blue-500">
+                        <span>No</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 pt-6">
+                <button type="button" onclick="closeModal()"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded-lg px-6 py-2 transition">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        class="bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg px-6 py-2 shadow-md transition">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('empleadoModal');
+    const modalContent = document.getElementById('modalContent');
+
+    function openModal() {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function closeModal() {
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0');
+
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+</script>
 
 <footer class="bg-blue-800 text-white text-center py-4 mt-auto">
     <p>© 2025 Laboratorios XYZ — ROOM_911 Access System</p>

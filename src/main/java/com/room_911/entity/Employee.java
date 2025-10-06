@@ -3,20 +3,20 @@ package com.room_911.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "employees")
 @Data
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long employeeId;
+    @Column(name = "employee_id")
+    private String employeeId;
 
     private String name;
 
     private String surname;
+
+    private Long document;
 
     private boolean haveAccess;
 
@@ -25,6 +25,22 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private ProductionDepartment productionDepartment;
+
+    public Long getDocument() {
+        return document;
+    }
+
+    public void setDocument(Long document) {
+        this.document = document;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
 
     public boolean isHaveAccess() {
         return haveAccess;

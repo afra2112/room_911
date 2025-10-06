@@ -15,9 +15,11 @@ public class Attemp{
 
     private LocalDateTime date;
 
-    private ResultEnum resultEnum;
+    private ResultEnum result;
 
-    private Long entryNumber;
+    private String entryNumber;
+
+    private String details;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
@@ -39,19 +41,27 @@ public class Attemp{
         this.date = date;
     }
 
-    public ResultEnum getResultEnum() {
-        return resultEnum;
+    public String getDetails() {
+        return details;
     }
 
-    public void setResultEnum(ResultEnum resultEnum) {
-        this.resultEnum = resultEnum;
+    public void setDetails(String details) {
+        this.details = details;
     }
 
-    public Long getEntryNumber() {
+    public ResultEnum getResult() {
+        return result;
+    }
+
+    public void setResult(ResultEnum result) {
+        this.result = result;
+    }
+
+    public String getEntryNumber() {
         return entryNumber;
     }
 
-    public void setEntryNumber(Long entryNumber) {
+    public void setEntryNumber(String entryNumber) {
         this.entryNumber = entryNumber;
     }
 
